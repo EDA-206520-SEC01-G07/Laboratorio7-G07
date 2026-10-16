@@ -70,6 +70,7 @@ def put(my_bst, key, value):
     return my_bst
 
 def get_node(root, key):
+    """Obtiene el nodo con la key buscada si está vacia la rama retorna None, retorna el nodo en el que se encuentra la key."""
     if root is None:
         return None
     comparison = default_compare(key, root)
@@ -84,6 +85,7 @@ def get_node(root, key):
     return result
 
 def get(my_bst, key):
+    """Obtiene el valor asociado a la key buscada en el binary search tree, en caso de no existir la llave retorna None."""
     node = get_node(my_bst['root'], key)
     if node is None:
         return None
