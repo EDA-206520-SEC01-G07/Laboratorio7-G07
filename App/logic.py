@@ -27,6 +27,8 @@
 import os
 import csv
 import datetime
+from DataStructures.Tree import binary_search_tree as bst
+from DataStructures.List import array_list as al
 
 # TODO Realice la importación del Árbol Binario Ordenado
 # TODO Realice la importación de ArrayList (al) como estructura de datos auxiliar para sus requerimientos
@@ -63,8 +65,7 @@ def load_data(analyzer, crimesfile):
     Carga los datos de los archivos CSV en el modelo
     """
     crimesfile = data_dir + crimesfile
-    input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
-                                delimiter=",")
+    input_file = csv.DictReader(open(crimesfile, encoding="utf-8"), delimiter=",")
     for crime in input_file:
         add_crime(analyzer, crime)
     return analyzer
