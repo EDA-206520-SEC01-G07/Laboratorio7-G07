@@ -68,3 +68,23 @@ def put(my_bst, key, value):
     root = insert_node(my_bst['root'], key, value)
     my_bst['root'] = root
     return my_bst
+
+def get_node(root, key):
+    if root is None:
+        return None
+    comparison = default_compare(key, root)
+    if comparison == 1:
+        root = root['right']
+        result = get_node(root, key)
+    elif comparison == -1:
+        root = root['left']
+        result = get_node(root, key)
+    else:
+        return root
+    return result
+
+def get(my_bst, key):
+    node = get_node(my_bst['root'], key)
+    if node is None:
+        return None
+    return bst_node.get_value(node)
