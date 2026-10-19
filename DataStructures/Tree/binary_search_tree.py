@@ -90,3 +90,44 @@ def get(my_bst, key):
     if node is None:
         return None
     return bst_node.get_value(node)
+
+def contains(my_bst, key):
+    node = get_node(my_bst['root'], key)
+    return node is not None
+
+def is_empty(my_bst):
+    if size(my_bst) == 0:
+        return True
+    return False
+
+def get_min_node(root):
+    if root is None:
+        return None
+    if root['left'] is None:
+        return root
+    else:
+        root = root['left']
+        result = get_min_node(root)
+    return result
+
+def get_min(my_bst):
+    node = get_min_node(my_bst['root'])
+    if node is None:
+        return None
+    return node['key']
+
+def get_max_node(root):
+    if root is None:
+        return None
+    if root['right'] is None:
+        return root
+    else:
+        root = root['right']
+        result = get_max_node(root)
+    return result
+
+def get_max(my_bst):
+    node = get_max_node(my_bst['root'])
+    if node is None:
+        return None
+    return node['key']
