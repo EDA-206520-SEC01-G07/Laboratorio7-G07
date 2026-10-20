@@ -1,5 +1,5 @@
 from DataStructures.Tree import bst_node
-
+from DataStructures.List import single_linked_list as sll
 
 def new_map():
     """Crea una nueva tabla de simbolos (map) ordenada basada en un árbol binario de búsqueda (BST).
@@ -131,3 +131,15 @@ def get_max(my_bst):
     if node is None:
         return None
     return node['key']
+
+def values_range(root, key_initial, key_final, list_value):
+    if root is None:
+        return list_value
+    key = bst_node.get_key(root)
+    if key_initial < key:
+        values_range(root['left'], key_initial, key_final, list_value)
+    if key_initial <= key <= key_final:
+        sll.add_last(list_value, bst_node.get_value(root))
+    if key_final > key:
+        values_range(root['right'], key_initial, key_final, list_value)
+    return list_value
