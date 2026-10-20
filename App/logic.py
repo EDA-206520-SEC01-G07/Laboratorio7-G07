@@ -104,11 +104,11 @@ def add_date_index(datentry, crime):
     lst = datentry['lstcrimes']
     al.add_last(lst, crime)
     offenseIndex = datentry['offenseIndex']
-    offentry = lp.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
+    offentry = ml.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
     if (offentry is None):
         entry = new_offense_entry(crime['OFFENSE_CODE_GROUP'], crime)
         al.add_last(entry['lstoffenses'], crime)
-        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], entry)
+        ml.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], entry)
     else:
         al.add_last(offentry['lstoffenses'], crime)
     return datentry
@@ -120,7 +120,7 @@ def new_data_entry(crime):
     binario.
     """
     entry = {'offenseIndex': None, 'lstcrimes': None}
-    entry['offenseIndex'] = lp.new_map(num_elements=30,
+    entry['offenseIndex'] = ml.new_map(num_elements=30,
                                         load_factor=0.5)
     entry['lstcrimes'] = al.new_list()
     return entry
