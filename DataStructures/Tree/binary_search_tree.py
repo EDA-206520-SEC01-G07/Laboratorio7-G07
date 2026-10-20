@@ -132,6 +132,65 @@ def get_max(my_bst):
         return None
     return node['key']
 
+def delete_min_tree(root):
+    """Elimina el nodo con la llave más pequeña del subárbol y retorna la nueva raíz.
+ 
+    Args:
+        root (bst_node): Raíz del subárbol a examinar.
+ 
+    Returns:
+        bst_node: Raíz del subárbol sin la llave más pequeña (None si queda vacío).
+    """
+    if root is None:
+        return None
+    if root['left'] is None:
+        return root['right']
+    root['left'] = delete_min_tree(root['left'])
+    root['size'] = 1 + size_tree(root['left']) + size_tree(root['right'])
+    return root
+
+def delete_min(my_bst):
+    """Elimina la llave más pequeña de la tabla y su valor asociado.
+ 
+    Args:
+        my_bst (binary_search_tree): El árbol de búsqueda.
+ 
+    Returns:
+        binary_search_tree: El árbol sin la llave más pequeña.
+    """
+    my_bst['root'] = delete_min_tree(my_bst['root'])
+    return my_bst
+
+def delete_max_tree(root):
+    """Elimina el nodo con la llave más grande del subárbol y retorna la nueva raíz.
+    
+    Args:
+        root (bst_node): Raíz del subárbol a examinar.
+ 
+    Returns:
+        bst_node: Raíz del subárbol sin la llave más grande (None si queda vacío).
+    """
+    if root is None:
+        return None
+    if root['right'] is None:
+        return root['left']
+    root['right'] = delete_max_tree(root['right'])
+    root['size'] = 1 + size_tree(root['left']) + size_tree(root['right'])
+    return root
+ 
+ 
+def delete_max(my_bst):
+    """Elimina la llave más grande de la tabla y su valor asociado.
+ 
+    Args:
+        my_bst (binary_search_tree): El árbol de búsqueda.
+ 
+    Returns:
+        binary_search_tree: El árbol sin la llave más grande.
+    """
+    my_bst['root'] = delete_max_tree(my_bst['root'])
+    return my_bst
+
 def values_range(root, key_initial, key_final, list_value):
     if root is None:
         return list_value
@@ -147,3 +206,96 @@ def values_range(root, key_initial, key_final, list_value):
 def values(my_bst, key_initial, key_final):
     list_value = sll.new_list()
     return values_range(my_bst['root'], key_initial, key_final, list_value)
+
+def key_set_tree(root, key_list):
+    """Construye una lista con las llaves del subárbol, recorriéndolo en inorder
+    (hijo izquierdo, raíz, hijo derecho), por lo que quedan de menor a mayor.
+ 
+    Args:
+        root (bst_node): Raíz del subárbol a examinar.
+        key_list (single_linked_list): Lista de respuesta, que se llena en el recorrido.
+ 
+    Returns:
+        single_linked_list: Lista con las llaves del subárbol.
+    """
+    if root is not None:
+        key_set_tree(root['left'], key_list)
+        sll.add_last(key_list, bst_node.get_key(root))
+        key_set_tree(root['right'], key_list)
+    return key_list
+ 
+ 
+def key_set(my_bst):
+    """Retorna una lista con todas las llaves de la tabla, ordenadas de menor a mayor.
+ 
+    Args:
+        my_bst (binary_search_tree): El árbol de búsqueda.
+ 
+    Returns:
+        single_linked_list: Lista con todas las llaves de la tabla.
+    """
+    key_list = sll.new_list()
+    return key_set_tree(my_bst['root'], key_list)
+ 
+ 
+def value_set_tree(root, value_list):
+    """Construye una lista con los valores del subárbol, recorriéndolo en inorder
+    (hijo izquierdo, raíz, hijo derecho), en el orden de sus llaves.
+ 
+    Args:
+        root (bst_node): Raíz del subárbol a examinar.
+        value_list (single_linked_list): Lista de respuesta, que se llena en el recorrido.
+ 
+    Returns:
+        single_linked_list: Lista con los valores del subárbol.
+    """
+    if root is not None:
+        value_set_tree(root['left'], value_list)
+        sll.add_last(value_list, bst_node.get_value(root))
+        value_set_tree(root['right'], value_list)
+    return value_list
+ 
+ 
+def value_set(my_bst):
+    """Retorna una lista con todos los valores de la tabla, en el orden de sus llaves.
+ 
+    Args:
+        my_bst (binary_search_tree): El árbol de búsqueda.
+ 
+    Returns:
+        single_linked_list: Lista con todos los valores de la tabla.
+    """
+    value_list = sll.new_list()
+    return value_set_tree(my_bst['root'], value_list)
+ 
+def height_tree(root):
+    """Retorna la altura del subárbol que empieza en root.
+ 
+    La altura de un árbol vacío es 0, la de un solo nodo es 1, y en general es
+    1 + la mayor de las alturas de sus dos hijos. Cada llamada retorna su altura
+    a la llamada que la hizo, por lo que no se necesita un contador externo.
+ 
+    Args:
+        root (bst_node): Raíz del subárbol a examinar.
+ 
+    Returns:
+        int: Altura del subárbol.
+    """
+    if root is None:
+        return 0
+    left_height = height_tree(root['left'])
+    right_height = height_tree(root['right'])
+    if left_height > right_height:
+        return 1 + left_height
+    return 1 + right_height
+
+def height(my_bst):
+    """Retorna la altura del árbol de búsqueda.
+ 
+    Args:
+        my_bst (binary_search_tree): El árbol de búsqueda.
+ 
+    Returns:
+        int: Altura del árbol.
+    """
+    return height_tree(my_bst['root'])

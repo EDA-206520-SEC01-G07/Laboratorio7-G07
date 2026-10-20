@@ -66,12 +66,13 @@ def add_element(my_list, element, pos):
     """
     element_node = new_single_node(element)
     if pos > size(my_list):
-        return IndexError("Position out of range.")
+        raise IndexError("Position out of range.")
     elif pos == 0:
         return add_first(my_list,element)
     elif pos == size(my_list):
         my_list["last"]["next"] = element_node
         my_list["last"] = element_node
+        my_list["size"] += 1
         return my_list
     else:
         actual_node = my_list["first"]
