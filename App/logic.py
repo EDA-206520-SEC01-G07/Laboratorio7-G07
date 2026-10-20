@@ -153,40 +153,44 @@ def index_height(analyzer):
     """
     Altura del arbol
     """
-    # TODO Completar la función de consulta de altura del árbol
-    pass
+    return bst.height(analyzer['dateIndex'])
 
 
 def index_size(analyzer):
     """
     Numero de elementos en el indice
     """
-    # TODO Completar la función de consulta de tamaño del árbol
-    pass
+    return bst.size(analyzer['dateIndex'])
 
 
 def min_key(analyzer):
     """
     Llave mas pequena
     """
-    # TODO Completar la función de consulta de la llave mínima
-    pass
+    return bst.get_min(analyzer['dateIndex'])
 
 
 def max_key(analyzer):
     """
     Llave mas grande
     """
-    # TODO Completar la función de consulta de la llave máxima
-    pass
+    return bst.get_max(analyzer['dateIndex'])
 
 
 def get_crimes_by_range(analyzer, initialDate, finalDate):
     """
     Retorna el numero de crimenes en un rago de fechas.
     """
-    # TODO Completar la función de consulta de crimenes por rango de fechas
-    pass
+    initial = datetime.datetime.strptime(initialDate, '%Y-%m-%d').date()
+    final = datetime.datetime.strptime(finalDate, '%Y-%m-%d').date()
+    date_entries = bst.values(analyzer['dateIndex'], initial, final)
+
+    total = 0
+    node = date_entries['first']
+    while node is not None:
+        total += al.size(node['info']['lstcrimes'])
+        node = node['next']
+    return total
 
 
 def get_crimes_by_range_code(analyzer, initialDate, offensecode):
@@ -194,5 +198,12 @@ def get_crimes_by_range_code(analyzer, initialDate, offensecode):
     Para una fecha determinada, retorna el numero de crimenes
     de un tipo especifico.
     """
-    # TODO Completar la función de consulta de crimenes por tipo de crimen en una fecha
-    pass
+    date = datetime.datetime.strptime(initialDate, '%Y-%m-%d').date()
+    date_entry = bst.get(analyzer['dateIndex'], date)
+    if date_entry is None:
+        return 0
+
+    offense_entry = ml.get(date_entry['offenseIndex'], offensecode)
+    if offense_entry is None:
+        return 0
+    return al.size(offense_entry['lstoffenses'])
