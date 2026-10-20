@@ -29,10 +29,8 @@ import csv
 import datetime
 from DataStructures.Tree import binary_search_tree as bst
 from DataStructures.List import array_list as al
-
-# TODO Realice la importación del Árbol Binario Ordenado
-# TODO Realice la importación de ArrayList (al) como estructura de datos auxiliar para sus requerimientos
-# TODO Realice la importación de LinearProbing (lp) como estructura de datos auxiliar para sus requerimientos
+from DataStructures.Tree import binary_search_tree as bst
+from DataStructures.Map import map_linear_probing as ml
 
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
@@ -40,22 +38,13 @@ data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 
 
 def new_logic():
-    """ Inicializa el analizador
-
-    Crea una lista vacia para guardar todos los crimenes
-    Se crean indices (Maps) por los siguientes criterios:
-    -Fechas
-
-    Retorna el analizador inicializado.
-    """
     analyzer = {'crimes': None,
                 'dateIndex': None
                 }
 
     analyzer['crimes'] = al.new_list()
-    # TODO completar la creación del mapa ordenado
-    analyzer['dateIndex'] = None
-    
+    analyzer['dateIndex'] = bst.new_map()
+
     return analyzer
 
 # Funciones para realizar la carga
@@ -97,8 +86,8 @@ def update_date_index(map, crime):
     crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
     entry = bst.get(map, crimedate.date())
     if entry is None:
-        # TODO Realizar el caso en el que no se encuentra la fecha
-        pass
+        datentry = new_data_entry(crime)
+        bst.put(map, crimedate.date(), datentry)
     else:
         datentry = entry
     add_date_index(datentry, crime)
@@ -117,11 +106,11 @@ def add_date_index(datentry, crime):
     offenseIndex = datentry['offenseIndex']
     offentry = lp.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
     if (offentry is None):
-        # TODO Realice el caso en el que no se encuentre el tipo de crimen
-        pass
+        entry = new_offense_entry(crime['OFFENSE_CODE_GROUP'], crime)
+        al.add_last(entry['lstoffenses'], crime)
+        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], entry)
     else:
-        # TODO Realice el caso en el que se encuentre el tipo de crimen
-        pass
+        al.add_last(offentry['lstoffenses'], crime)
     return datentry
 
 
