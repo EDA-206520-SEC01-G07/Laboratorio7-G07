@@ -147,3 +147,130 @@ def values_range(root, key_initial, key_final, list_value):
 def values(my_bst, key_initial, key_final):
     list_value = sll.new_list()
     return values_range(my_bst['root'], key_initial, key_final, list_value)
+
+def keys(my_bst, key_initial, key_final):
+    list_key = sll.new_list()
+    return keys_range(my_bst['root'], key_initial, key_final, list_key)
+
+
+def keys_range(root, key_initial, key_final, list_key):
+    if root is None:
+        return list_key
+    key = bst_node.get_key(root)
+    if key_initial < key:
+        keys_range(root['left'], key_initial, key_final, list_key)
+    if key_initial <= key <= key_final:
+        sll.add_last(list_key, key)
+    if key_final > key:
+        keys_range(root['right'], key_initial, key_final, list_key)
+    return list_key
+
+def remove(my_bst, key):
+    my_bst['root'] = remove_node(my_bst['root'], key)
+    return my_bst
+
+def delete_min_tree(root):
+    if root is None:
+        return None
+    if root['left'] is None:
+        return root['right']
+    root['left'] = delete_min_tree(root['left'])
+    root['size'] = 1 + size_tree(root['left']) + size_tree(root['right'])
+    return root
+
+
+def remove_node(root, key):
+    if root is None:
+        return None
+    comparison = default_compare(key, root)
+    if comparison == -1:
+        root['left'] = remove_node(root['left'], key)
+    elif comparison == 1:
+        root['right'] = remove_node(root['right'], key)
+    else:
+        if root['right'] is None:
+            return root['left']
+        if root['left'] is None:
+            return root['right']
+        old = root
+        root = get_min_node(old['right'])
+        root['right'] = delete_min_tree(old['right'])
+        root['left'] = old['left']
+    root['size'] = 1 + size_tree(root['left']) + size_tree(root['right'])
+    return root
+
+
+def floor(my_bst, key):
+    node = floor_key(my_bst['root'], key)
+    if node is None:
+        return None
+    return bst_node.get_key(node)
+
+
+def floor_key(root, key):
+    if root is None:
+        return None
+    comparison = default_compare(key, root)
+    if comparison == 0:
+        return root
+    if comparison == -1:
+        return floor_key(root['left'], key)
+    candidate = floor_key(root['right'], key)
+    if candidate is not None:
+        return candidate
+    return root
+
+def ceiling(my_bst, key):
+    node = ceiling_key(my_bst['root'], key)
+    if node is None:
+        return None
+    return bst_node.get_key(node)
+
+
+def ceiling_key(root, key):
+    if root is None:
+        return None
+    comparison = default_compare(key, root)
+    if comparison == 0:
+        return root
+    if comparison == 1:
+        return ceiling_key(root['right'], key)
+    candidate = ceiling_key(root['left'], key)
+    if candidate is not None:
+        return candidate
+    return root
+
+
+def select(my_bst, pos):
+    if pos < 0 or pos >= size(my_bst):
+        return None
+    node = select_key(my_bst['root'], pos)
+    if node is None:
+        return None
+    return bst_node.get_key(node)
+
+
+def select_key(root, pos):
+    if root is None:
+        return None
+    left_size = size_tree(root['left'])
+    if pos < left_size:
+        return select_key(root['left'], pos)
+    if pos > left_size:
+        return select_key(root['right'], pos - left_size - 1)
+    return root
+
+
+def rank(my_bst, key):
+    return rank_keys(my_bst['root'], key)
+
+
+def rank_keys(root, key):
+    if root is None:
+        return 0
+    comparison = default_compare(key, root)
+    if comparison == -1:
+        return rank_keys(root['left'], key)
+    if comparison == 1:
+        return 1 + size_tree(root['left']) + rank_keys(root['right'], key)
+    return size_tree(root['left'])
