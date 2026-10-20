@@ -143,3 +143,7 @@ def values_range(root, key_initial, key_final, list_value):
     if key_final > key:
         values_range(root['right'], key_initial, key_final, list_value)
     return list_value
+
+def values(my_bst, key_initial, key_final):
+    list_value = sll.new_list()
+    return values_range(my_bst['root'], key_initial, key_final, list_value)
